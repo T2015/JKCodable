@@ -27,6 +27,7 @@ public extension Decodable {
         if let obj = try? decoder.decode(T.self, from: jsonData) {
             return obj
         }
+        print("JKCodable.Decodable.fromJsonData: decoder.decode failure")
         return nil
     }
     
@@ -36,15 +37,17 @@ public extension Decodable {
         if let data = try? JSONSerialization.data(withJSONObject: jsonDic, options: [.prettyPrinted]) {
             return fromJsonData(data)
         }
+        print("JKCodable.Decodable.fromJsonDic: JSONSerialization.data failure")
         return nil
     }
     
     
-    static func fromJsonString(_ jsonString: String) -> Self? {
+    static func fromJsonString(_ jsonString: String) -> T? {
         
         if let data = jsonString.data(using: .utf8) {
             return fromJsonData(data)
         }
+        print("JKCodable.Decodable.fromJsonString: jsonString.data failure")
         return nil
     }
 }
@@ -58,6 +61,7 @@ public extension Encodable {
         if let data = toJsonData() {
             return String(data: data, encoding: .utf8)
         }
+        print("JKCodable.Encodable.toJsonString: String.data failure")
         return nil
     }
     
@@ -69,6 +73,7 @@ public extension Encodable {
             if let dic = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) {
                 return dic as? [String: Any]
             }
+            print("JKCodable.Encodable.toJsonDic: JSONSerialization.jsonObject failure")
         }
         return nil
     }
@@ -80,6 +85,7 @@ public extension Encodable {
         if let data = try? encoder.encode(self) {
             return data
         }
+        print("JKCodable.Encodable.toJsonData: encoder.encode failure")
         return nil
     }
     
@@ -103,6 +109,7 @@ public extension Array where Element: Codable {
         if let data = jsonString.data(using: .utf8) {
             return fromJsonData(data)
         }
+        print("JKCodable.Array.Codable.fromJsonString: jsonString.data failure")
         return nil
     }
     
@@ -113,6 +120,7 @@ public extension Array where Element: Codable {
             if let dic = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers) {
                 return dic as? [[String: Any]]
             }
+            print("JKCodable.Array.Codable.toDicArray: JSONSerialization.jsonObject failure")
         }
         return nil
     }
@@ -122,6 +130,7 @@ public extension Array where Element: Codable {
         if let data = try? JSONSerialization.data(withJSONObject: jsonDic, options: [.prettyPrinted]) {
             return fromJsonData(data)
         }
+        print("JKCodable.Array.Codable.fromDicArray: JSONSerialization.data failure")
         return nil
     }
     
@@ -134,6 +143,7 @@ public extension Array where Element: Codable {
         if let data = try? encoder.encode(self) {
             return data
         }
+        print("JKCodable.Array.Codable.toJsonData: encoder.encode failure")
         return nil
     }
     
@@ -143,6 +153,7 @@ public extension Array where Element: Codable {
         if let obj = try? decoder.decode([Element].self, from: jsonData) {
             return obj
         }
+        print("JKCodable.Array.Codable.fromJsonData: decoder.decode failure")
         return nil
     }
     
