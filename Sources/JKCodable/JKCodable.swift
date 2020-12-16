@@ -54,10 +54,9 @@ public extension Encodable {
     
     func toJson() -> Any? {
         
-        var result: Any? = nil
-        guard let data = toData() else { return result }
         
-        result = data.toJson()
+        guard let data = toData() else { return nil }
+        let result = data.toJson()
         return result
     }
     
@@ -91,10 +90,9 @@ public extension Array where Element: Codable {
     }
     
     static func fromData(_ data: Data?) -> T? {
-        
+
+        guard let tmp = data else { return nil }
         var result: T? = nil
-        guard let tmp = data else { return result }
-        
         do {
             result = try JSONSerialization.jsonObject(with: tmp, options: [.mutableContainers]) as? T
         } catch {
@@ -129,9 +127,9 @@ extension Data {
     
     static func fromJson(_ json: Any?) -> Self? {
     
+        
+        guard let json = json else { return nil }
         var result: Data? = nil
-        guard let json = json else { return result }
-
         do {
             result = try JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted])
         } catch {
