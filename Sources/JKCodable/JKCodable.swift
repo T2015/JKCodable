@@ -93,10 +93,10 @@ public extension Array where Element: Codable {
     static func fromData(_ data: Data?) -> T? {
         
         var result: T? = nil
-        guard let data = data else { return result }
+        guard let tmp = data else { return result }
         
         do {
-            result = try JSONSerialization.jsonObject(with: data, options: [.mutableContainers]) as? T
+            result = try JSONSerialization.jsonObject(with: tmp, options: [.mutableContainers]) as? T
         } catch {
             print("JKCodable.Array.fromData: \n \(error)")
         }
