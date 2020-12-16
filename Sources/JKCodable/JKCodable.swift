@@ -105,14 +105,14 @@ public extension Array where Element: Codable {
     
     func toJson() -> Any? {
         let encoder = JSONEncoder()
-        var result: Any? = nil
+        var result: Data? = nil
         
         do {
             result = try encoder.encode(self)
         } catch {
             print("JKCodable.Array.toJson: \n \(error)")
         }
-        return result
+        return result?.toJson()
     }
     
     func toData() -> Data? {
@@ -131,7 +131,7 @@ extension Data {
     
         var result: Data? = nil
         guard let json = json else { return result }
-        
+
         do {
             result = try JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted])
         } catch {
@@ -153,10 +153,6 @@ extension Data {
 }
 
 
-struct Json: Codable {
-    
-    
-}
 
 
 
