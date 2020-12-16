@@ -85,6 +85,7 @@ public extension Array where Element: Codable {
     typealias T = Self
     
     static func fromJson(_ json: Any?) -> T? {
+        
         let data = Data.fromJson(json)
         return fromData(data)
     }
@@ -94,7 +95,7 @@ public extension Array where Element: Codable {
         guard let tmp = data else { return nil }
         var result: T? = nil
         do {
-            result = try JSONSerialization.jsonObject(with: tmp, options: [.mutableContainers]) as? T
+            result = try JSONDecoder().decode(T.self, from: tmp)
         } catch {
             print("JKCodable.Array.fromData: \n \(error)")
         }
