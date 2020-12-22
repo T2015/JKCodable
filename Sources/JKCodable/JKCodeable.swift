@@ -81,7 +81,7 @@ public extension JKCodeable {
 
 
 
-public extension Array where Element: Codable {
+public extension Array where Element: JKCodeable {
     
     
     typealias S = Self
