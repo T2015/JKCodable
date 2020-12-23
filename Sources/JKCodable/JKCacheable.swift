@@ -19,7 +19,7 @@ import Foundation
 
 
 /// 缓存协议，遵循协议即可获得相应功能
-protocol JKCacheable: Codable {
+public protocol JKCacheable: Codable {
     
     /// 保存路径
     static var directoryPath: String { get }
@@ -27,7 +27,7 @@ protocol JKCacheable: Codable {
     static var fileName: String { get }
 }
 
-extension JKCacheable {
+public extension JKCacheable {
 
     typealias T = Self
 
@@ -87,7 +87,7 @@ extension JKCacheable {
 }
 
 
-extension Array where Element: JKCacheable {
+public extension Array where Element: JKCacheable {
     
     
     typealias T = Self
@@ -142,7 +142,7 @@ extension Array where Element: JKCacheable {
 
 
 
-extension FileManager {
+public extension FileManager {
     
     func createDirectoryIfNoExist(_ path: String) throws {
         
