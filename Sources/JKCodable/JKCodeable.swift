@@ -26,7 +26,7 @@ public extension JKCodeable {
     
     
     
-    static func fromData(_ data: Data?) -> S? {
+    static func fromData(_ data: Data?) throws -> S? {
         
         guard let data = data else { return nil }
         
@@ -36,29 +36,38 @@ public extension JKCodeable {
         do {
             obj = try decoder.decode(S.self, from: data)
         } catch{
-            print("JKCodable.Decodable.fromJsonData: \n\(error)")
+            throw error
         }
         
         return obj
     }
     
     
-    static func fromJson(_ json: Any?) -> S? {
+    static func fromJson(_ json: Any?) throws -> S? {
         
         guard let json = json else { return nil }
-        
-        if let data = Data.fromJson(json) {
-            return fromData(data)
+        var result: S? = nil
+        do {
+            let data = try Data.fromJson(json)
+            result = try fromData(data)
+        } catch {
+            throw error
         }
-        return nil
+        return result
     }
     
     
-    func toJson() -> Any? {
+    func toJson() throws -> Any? {
         
         
         guard let data = toData() else { return nil }
-        let result = data.toJson()
+        var result: Any? = nil
+        
+        do {
+            result = try data.toJson()
+        } catch {
+            throw error
+        }
         return result
     }
     
@@ -86,43 +95,60 @@ public extension Array where Element: JKCodeable {
     
     typealias S = Self
     
-    static func fromJson(_ json: Any?) -> S? {
-        let data = Data.fromJson(json)
-        return fromData(data)
-    }
-    
-    
-    
-    func toJson() -> Any? {
-        let encoder = JSONEncoder()
-        var result: Data? = nil
+    static func fromJson(_ json: Any?) throws -> S? {
+        
+        var result: S? = nil
         
         do {
-            result = try encoder.encode(self)
+            let data = try Data.fromJson(json)
+            result = try fromData(data)
         } catch {
-            print("JKCodable.Array.toJson: \n \(error)")
+            throw error
         }
-        return result?.toJson()
+        return result
     }
     
     
     
-    static func fromData(_ data: Data?) -> S? {
+    func toJson() throws -> Any? {
+        let encoder = JSONEncoder()
+        var result: Any? = nil
+        
+        do {
+            let data = try encoder.encode(self)
+            result = try data.toJson()
+        } catch {
+            throw error
+        }
+        return result
+    }
+    
+    
+    
+    static func fromData(_ data: Data?) throws -> S? {
 
         guard let tmp = data else { return nil }
         var result: S? = nil
         do {
             result = try JSONDecoder().decode(S.self, from: tmp)
         } catch {
-            print("JKCodable.Array.fromData: \n \(error)")
+            throw error
         }
         return result
     }
     
     
-    func toData() -> Data? {
-        let json = toJson()
-        return Data.fromJson(json)
+    func toData() throws -> Data? {
+        
+        var result: Data? = nil
+        
+        do {
+            let json = try toJson()
+            result = try Data.fromJson(json)
+        } catch {
+            throw error
+        }
+        return result
     }
     
 
@@ -131,24 +157,24 @@ public extension Array where Element: JKCodeable {
 
 extension Data {
     
-    static func fromJson(_ json: Any?) -> Self? {
+    static func fromJson(_ json: Any?) throws -> Self? {
     
         guard let json = json else { return nil }
         var result: Data? = nil
         do {
             result = try JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted])
         } catch {
-            print("JKCodable.Data.fromJson: \n \(error)")
+            throw error
         }
         return result
     }
     
-    func toJson() -> Any? {
+    func toJson() throws -> Any? {
         var result: Any? = nil
         do {
             result = try JSONSerialization.jsonObject(with: self, options: [.mutableContainers])
         } catch {
-            print("JKCodable.Data.toJson: \n \(error)")
+            throw error
         }
         return result
     }
