@@ -59,12 +59,13 @@ public extension JKCodeable {
     
     func toJson() throws -> Any? {
         
-        
-        guard let data = toData() else { return nil }
         var result: Any? = nil
         
         do {
-            result = try data.toJson()
+            let data = try toData()
+            if let data = data {
+                result = try data.toJson()
+            }
         } catch {
             throw error
         }
@@ -72,7 +73,7 @@ public extension JKCodeable {
     }
     
     
-    func toData() -> Data? {
+    func toData() throws -> Data? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         var result: Data? = nil
@@ -80,7 +81,7 @@ public extension JKCodeable {
         do {
             result = try encoder.encode(self)
         } catch {
-            print("JKCodable.Encodable.toJsonData: \n \(error)")
+            throw error
         }
         
         return result
